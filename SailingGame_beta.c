@@ -10,8 +10,8 @@
 #define WIDTH 100
 #define HEIGHT 33
 #define MAX_PLAYERS 5
-#define MAX_YSTEPS 3
-#define MAX_XSTEPS 6
+#define MAX_YSTEPS 4
+#define MAX_XSTEPS 10
 
 HANDLE hConsole;
 
@@ -176,6 +176,43 @@ int main()
                 move(&(players[i]));
             }
         }
+        
+        int number_of_winners = 0;
+        for (int i = 0; i < player_number; i++)
+        {
+            if (players[i].finish)
+            {
+                winners[number_of_winners] = players[i];
+                number_of_winners++;
+                gotoXY(players[i].X, players[i].Y);
+                getBackgroundColor(players[i].X, players[i].Y, false);
+                putch(players[i].symbol);
+            }
+        }
+
+        if (number_of_winners == 1)
+        {
+            gotoXY(0, 34);
+            SetConsoleTextAttribute(hConsole, 07);
+            printf("%s has won! Congratulations!", winners[0].name);
+            Sleep(5000);
+            exit(0);
+        }
+
+        if (number_of_winners > 1)
+        {
+            gotoXY(0, 34);
+            SetConsoleTextAttribute(hConsole, 07);
+            printf("There has been a tie between: ", winners[0].name);
+            for (int i = 0; i < number_of_winners - 2; i++)
+            {
+                printf("%s, ", winners[i].name);
+            }
+            printf("%s ", winners[number_of_winners - 2].name);
+            printf("and %s", winners[number_of_winners - 1].name);
+            Sleep(5000);
+            exit(0);
+        }
 
         SetConsoleTextAttribute(hConsole, 07);
         gotoXY(0, 34);
@@ -259,40 +296,6 @@ int main()
                 players[i].skipRound = false;
             }
         }
-
-        int number_of_winners = 0;
-        for (int i = 0; i < player_number; i++)
-        {
-            if ((players[i].finish) && (players[i].Y < 18))
-            {
-                winners[number_of_winners] = players[i];
-                number_of_winners++;
-            }
-        }
-
-        if (number_of_winners == 1)
-        {
-            gotoXY(0, 34);
-            SetConsoleTextAttribute(hConsole, 07);
-            printf("%s has won! Congratulations!", winners[0].name);
-            Sleep(5000);
-            exit(0);
-        }
-
-        if (number_of_winners > 1)
-        {
-            gotoXY(0, 34);
-            SetConsoleTextAttribute(hConsole, 07);
-            printf("There has been a tie between: ", winners[0].name);
-            for (int i = 0; i < number_of_winners - 2; i++)
-            {
-                printf("%s, ", winners[i].name);
-            }
-            printf("%s ", winners[number_of_winners - 2].name);
-            printf("and %s", winners[number_of_winners - 1].name);
-            Sleep(5000);
-            exit(0);
-        }
     }
 
     return 0;
@@ -363,7 +366,7 @@ void drawMap()
 void deleteMessage(int line)
 {
     SetConsoleTextAttribute(hConsole, 07);
-    for (int i = 0; i < 150; i++)
+    for (int i = 0; i < 100; i++)
     {
         gotoXY(i, line);
         putch(' ');
@@ -473,7 +476,6 @@ int windEffect(int slope, int scale, char input[100])
 
 void windPush(int slope, int scale, int effectFactor, struct player * pplayer)
 {
-    
     gotoXY((*pplayer).X, (*pplayer).Y);
     getBackgroundColor((*pplayer).X, (*pplayer).Y, false);
     putch(' ');
@@ -677,11 +679,9 @@ void windPoint(int slope)
             gotoXY(0, 35);
             puts("    N\n\nW ---   E\n\n    S");
             break;
-    
         case 8:
             gotoXY(0, 35);
             puts("    N\n   \\\nW   \\   E\n\n    S");
             break;
-        
     }
 }

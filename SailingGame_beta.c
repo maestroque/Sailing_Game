@@ -83,7 +83,7 @@ int main()
 {
     system("mode 650");
     hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-    srand(time(NULL));
+    srand((unsigned) time(NULL));
     system("cls");
 
     struct player players[MAX_PLAYERS];
@@ -115,7 +115,7 @@ int main()
         }
     }
         
-
+    gotoXY(0, 0);
     printf("How many players are there? ");
     scanf("%d", &player_number);
 

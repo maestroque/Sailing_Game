@@ -83,12 +83,38 @@ int main()
 {
     system("mode 650");
     hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+    srand(time(NULL));
     system("cls");
 
     struct player players[MAX_PLAYERS];
     struct player winners[MAX_PLAYERS];
     int player_number;
     int slope, scale, effectFactor;
+    char selection = '\0';
+
+    printf("****************************************************\n");
+    printf("*             Welcome to Sailing Game!             *\n");
+    printf("*    -Made by Gkekas Aggelos and Kikas Georgios    *\n");
+    printf("****************************************************\n");
+    printf(">Press Enter to Play\n");
+    printf(">Press Space for Instructions\n");
+    while(true)
+    {   
+        selection = getch();
+        if(selection = ' ')
+        {
+            //Instructions
+        }
+        if(selection = ENTER)
+        {
+            for(int i = 0; i <= 5; i++)
+            {
+                deleteMessage(i);
+            }
+            break;
+        }
+    }
+        
 
     printf("How many players are there? ");
     scanf("%d", &player_number);
@@ -455,7 +481,6 @@ int windGeneration(int *slope, int *scale)
     int A[3] = {-2, -1, 0};
     static int prevSlope = 1;
     static int prevScale = 0;
-    srand(time(NULL));
 
     int variability1 = rand()%3;
     *slope = 1 + (abs(prevSlope + A[variability1]))%8;
@@ -469,7 +494,7 @@ int windGeneration(int *slope, int *scale)
 int windEffect(int slope, int scale, char input[100])
 {
     int steps = strlen(input);
-    int effectFactor = 1 + steps/3;
+    int effectFactor = 1 + steps/4;
 
     return effectFactor;
 }
@@ -673,7 +698,7 @@ void windPoint(int slope)
             break;
         case 6:
             gotoXY(0, 35);
-            puts("    N\n\nW   /   E\n  /\n    S");
+            puts("    N\n\nW   /   E\n   /\n    S");
             break;
         case 7:
             gotoXY(0, 35);

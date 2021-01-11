@@ -101,7 +101,7 @@ int main()
     while(true)
     {   
         selection = getch();
-        if(selection = ' ')
+        if(selection == ' ')
         {
             for(int i = 0; i <= 5; i++)
             {
@@ -138,7 +138,7 @@ int main()
             }
             break;
         }
-        if(selection = ENTER)
+        if(selection == ENTER)
         {
             for(int i = 0; i <= 5; i++)
             {

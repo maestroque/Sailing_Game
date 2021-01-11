@@ -103,7 +103,40 @@ int main()
         selection = getch();
         if(selection = ' ')
         {
-            //Instructions
+            for(int i = 0; i <= 5; i++)
+            {
+                deleteMessage(i);
+            }
+            gotoXY(0,0);
+            printf("\t\t\t>INSTRUCTIONS<\n\n");
+            printf("\tA Sailing Game set in a lake with an island on its center.\n");
+            printf("  The goal is to be the first player to make a full lap around the island.\n");
+            printf("Each turn, the players one by one enter their moves using the WASD keys\n");
+            printf("and the moves are then executed simultanuously for all players. But, the\n");
+            printf("wind is an unpredictable factor each turn and it's behaviour is revealed\n");
+            printf("after the players have entered their moves. Then the winds affects them,\n");
+            printf("and their actual position is revealed.\n");
+            printf("  Players could possibly crash into each other, in which case they are\n");
+            printf("sent back to the start of the lap. Also, there are two types of waters:\n");
+            printf("deep and shallow. Players can move regularly through deep waters(blue\n");
+            printf("color), but cannot move to shallow waters(light blue). Only the wind can\n");
+            printf("send a player there, in which case they lose a turn. Note that players\n");
+            printf("once they get to shallow waters can only move out to deep ones and not\n");
+            printf("to adjacent shallow water blocks.\n");
+            printf("  Have fun playing!\n");
+            printf("  *Players 2 to 5*\n\n");
+            printf("When you are ready to play, press ENTER.\n");
+            while(true)
+            {
+                int sel = '\0';
+                sel = getch();
+                if(sel == ENTER) break;
+            }
+            for(int i = 0; i <= 19; i++)
+            {
+                deleteMessage(i);
+            }
+            break;
         }
         if(selection = ENTER)
         {

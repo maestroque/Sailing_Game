@@ -584,11 +584,11 @@ void windPush(int slope, int scale, int effectFactor, struct player * pplayer)
     gotoXY((*pplayer).X, (*pplayer).Y);                          // του ανέμου και τη θέση μνήμης ενός παίκτη και
     getBackgroundColor((*pplayer).X, (*pplayer).Y, false);       // μετακινεί τον παίκτη σύμφωνα με τον άνεμο
     putch(' ');
-    int steps = effectFactor*scale;
+    int windSteps = effectFactor*scale;
 
     // Ο παίκτης διαγράφεται από την αρχική του θέση και οι συντεταγμενες του αλλάζουν σύμφωνα με τον άνεμο
 
-    for(int i = 0; i < steps; i++)
+    for(int i = 0; i < windSteps; i++)
     {
         switch(slope)
         {
@@ -622,7 +622,7 @@ void windPush(int slope, int scale, int effectFactor, struct player * pplayer)
                 break;
         }
 
-        // Αν ο παίκτης πέρασε από κάποιο checpoint ή από τον
+        // Αν ο παίκτης πέρασε από κάποιο checkpoint ή από τον
         // τερματισμό αυτό αποθηκεύεται στις πληροφορίες του 
 
         if ((map[(*pplayer).Y][(*pplayer).X] == '1'))

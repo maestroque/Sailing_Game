@@ -15,7 +15,7 @@
 
 HANDLE hConsole;
 
-struct player      // Structure που έχει τις πληροφορίες των παικτών
+struct player      // Structure που έχει τισ πληροφορίες των παικτών
 {
     char name[20];
     char symbol;
@@ -83,6 +83,8 @@ int main()
 {
     system("mode 650");
     hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+    SMALL_RECT windowSize = {0 , 0 , 99, 40};
+    SetConsoleWindowInfo(hConsole, TRUE, &windowSize);
     srand((unsigned) time(NULL));
     system("cls");
 
@@ -240,7 +242,7 @@ int main()
             deleteMessage(36);
         }
 
-        // Όσοι παίκτες δεν έχασαν τη σειρά τους μετακινούνται ανάλογα με την κίνησει που εισήγαγαν
+        // Όσοι παίκτες δεν έχασαν τη σειρά τους μετακινούνται ανάλογα με την κίνηση που εισήγαγαν
 
         for (int i = 0; i < player_number; i++)
         {
@@ -250,18 +252,56 @@ int main()
             }
         }
         
+        // Οι παίκτες δέχονται την επίδραση του ανέμου και τυπώνονται αντίστοιχα μηνύματα
+
+        SetConsoleTextAttribute(hConsole, 07);
+        gotoXY(0, 34);
+        printf("The players wanted to go there. But Wild is the Wind...");
+        Sleep(2000);
+        deleteMessage(34);
+        windGeneration(&slope, &scale);
+        if(scale != 0)
+        {   gotoXY(0, 34);
+            printf("This round the wind had: Slope of %d and Scale of %d", slope, scale);
+            windPoint(slope);
+        }
+        else 
+        {
+            gotoXY(0, 34);
+            puts("The wind was calm this round....");
+        }
+        Sleep(3000);
+        for(int i = 0; i <= 5; i++)
+        {
+            deleteMessage(34 + i);
+        }
+        
+        for(int j = 0; j < player_number; j++)
+        {
+         /* Οι παίκτες που έχουν χάσει τη σειρά τους δε δέχονται την επιρροή του ανέμου ενώ
+            όσοι στέλνονται στα ρηχά νερά από τον άνεμο χάνουν τη σειρά τους στον επόμενο γύρο */
+
+            if (players[j].skipRound)
+            {
+                players[j].skipRound = false;
+            }
+            else
+            {
+                effectFactor = windEffect(slope, scale, players[j].input);
+                windPush(slope, scale, effectFactor, &(players[j]));
+                if (map[players[j].Y][players[j].X] == ';') players[j].skipRound = true;
+            } 
+        }
+
         // Γίνεται έλεγχος για το αν έχει φτάσει κάποιος στον τερματισμό
 
         int number_of_winners = 0;
         for (int i = 0; i < player_number; i++)
         {
-            if (players[i].finish)
+            if ((players[i].finish) && (players[i].Y < 18))
             {
                 winners[number_of_winners] = players[i];
                 number_of_winners++;
-                gotoXY(players[i].X, players[i].Y);
-                getBackgroundColor(players[i].X, players[i].Y, false);
-                putch(players[i].symbol);
             }
         }
 
@@ -290,47 +330,6 @@ int main()
             printf("and %s", winners[number_of_winners - 1].name);
             Sleep(5000);
             exit(0);
-        }
-
-        // Αν κανείς δεν έχει τερματίσει, οι παίκτες δέχονατι την επίδραση του ανέμου και τυπώνονται αντίστοιχα μηνύματα
-
-        SetConsoleTextAttribute(hConsole, 07);
-        gotoXY(0, 34);
-        printf("The players wanted to go there. But Wild is the Wind...");
-        Sleep(2000);
-        deleteMessage(34);
-        windGeneration(&slope, &scale);
-        if(scale != 0)
-        {   gotoXY(0, 34);
-            printf("This round the wind had: Slope of %d and Scale of %d", slope, scale);
-            windPoint(slope);
-        }
-        else 
-        {
-            gotoXY(0, 34);
-            puts("The wind was calm this round....");
-        }
-        Sleep(3000);
-        for(int i = 0; i <= 4; i++)
-        {
-            deleteMessage(35 + i);
-        }
-        
-        for(int j = 0; j < player_number; j++)
-        {
-         /* Οι παίκτες που έχουν χάσει τη σειρά τους δε δέχονται την επιρροή του ανέμου ενώ
-            όσοι στέλνονται στα ρηχά νερά από τον άνεμο χάνουν τη σειρά τους στον επόμενο γύρο */
-
-            if (players[j].skipRound)
-            {
-                players[j].skipRound = false;
-            }
-            else
-            {
-                effectFactor = windEffect(slope, scale, players[j].input);
-                windPush(slope, scale, effectFactor, &(players[j]));
-                if (map[players[j].Y][players[j].X] == ';') players[j].skipRound = true;
-            } 
         }
 
      /* Γίνεται έλεγχος αν κάποιοι παίκτες βρέθηκαν στην ίδια θέση, και στην περίπτωση που 
@@ -365,7 +364,7 @@ int main()
             }
         }
 
-        // Οι παίκτες που "τράκαραν" επαναφέρωνται στην εκκίνηση
+        // Οι παίκτες που "τράκαραν" επαναφέρονται στην εκκίνηση
 
         deleteMessage(34);
         for(int i = 0; i < player_number; i++)
@@ -576,44 +575,64 @@ void windPush(int slope, int scale, int effectFactor, struct player * pplayer)
     gotoXY((*pplayer).X, (*pplayer).Y);                          // του ανέμου και τη θέση μνήμης ενός παίκτη και
     getBackgroundColor((*pplayer).X, (*pplayer).Y, false);       // μετακινεί τον παίκτη σύμφωνα με τον άνεμο
     putch(' ');
+    int steps = effectFactor*scale;
 
     // Ο παίκτης διαγράφεται από την αρχική του θέση και οι συντεταγμενες του αλλάζουν σύμφωνα με τον άνεμο
 
-    switch(slope)
+    for(int i = 0; i < steps; i++)
     {
-        case 1:
-            ((*pplayer).Y) = ((*pplayer).Y) - effectFactor*scale;
-            break;
-        case 2:
-            ((*pplayer).Y) = ((*pplayer).Y) - effectFactor*scale; 
-            ((*pplayer).X) = ((*pplayer).X) + effectFactor*scale;
-            break;
-        case 3: 
-            ((*pplayer).X) = ((*pplayer).X) + effectFactor*scale;
-            break;    
-        case 4:
-            ((*pplayer).Y) = ((*pplayer).Y) + effectFactor*scale; 
-            ((*pplayer).X) = ((*pplayer).X) + effectFactor*scale;
-            break;
-        case 5:
-            ((*pplayer).Y) = ((*pplayer).Y) + effectFactor*scale;
-            break;
-        case 6:
-            ((*pplayer).Y) = ((*pplayer).Y) + effectFactor*scale; 
-            ((*pplayer).X) = ((*pplayer).X) - effectFactor*scale;
-            break;
-        case 7: 
-            ((*pplayer).X) = ((*pplayer).X) - effectFactor*scale;
-            break;
-        case 8:
-            ((*pplayer).Y) = ((*pplayer).Y) - effectFactor*scale; 
-            ((*pplayer).X) = ((*pplayer).X) - effectFactor*scale;
-            break;
+        switch(slope)
+        {
+            case 1:
+                ((*pplayer).Y) = ((*pplayer).Y) - 1;
+                break;
+            case 2:
+                ((*pplayer).Y) = ((*pplayer).Y) - 1; 
+                ((*pplayer).X) = ((*pplayer).X) + 1;
+                break;
+            case 3: 
+                ((*pplayer).X) = ((*pplayer).X) + 1;
+                break;    
+            case 4:
+                ((*pplayer).Y) = ((*pplayer).Y) + 1; 
+                ((*pplayer).X) = ((*pplayer).X) + 1;
+                break;
+            case 5:
+                ((*pplayer).Y) = ((*pplayer).Y) + 1;
+                break;
+            case 6:
+                ((*pplayer).Y) = ((*pplayer).Y) + 1; 
+                ((*pplayer).X) = ((*pplayer).X) - 1;
+                break;
+            case 7: 
+                ((*pplayer).X) = ((*pplayer).X) - 1;
+                break;
+            case 8:
+                ((*pplayer).Y) = ((*pplayer).Y) - 1; 
+                ((*pplayer).X) = ((*pplayer).X) - 1;
+                break;
+        }
+
+        // Αν ο παίκτης πέρασε από κάποιο checpoint ή από τον
+        // τερματισμό αυτό αποθηκεύεται στις πληροφορίες του 
+
+        if ((map[(*pplayer).Y][(*pplayer).X] == '1'))
+        {
+            (*pplayer).checkpoint1 = true;
+        }
+        if ((map[(*pplayer).Y][(*pplayer).X] == '2') && ((*pplayer).checkpoint1))
+        {
+            (*pplayer).checkpoint2 = true;
+        }
+        if ((map[(*pplayer).Y][(*pplayer).X] == 'f') && ((*pplayer).checkpoint1) && ((*pplayer).checkpoint2))
+        {
+            (*pplayer).finish = true;
+        }
     }
 
     // Στην περίπτωση που ο άνεμος στείλει κάποιον παίκτη στη στερίά ή εκτός του χάρτη, αυτος επαναφέρεται στο νερό
 
-    if ((map[(*pplayer).Y][(*pplayer).X] == 'X') || (map[(*pplayer).Y][(*pplayer).X] == 'o') || ((*pplayer).X < 0) || ((*pplayer).X > 99) || ((*pplayer).Y < 0) || ((*pplayer).Y > 32))
+    if ((map[(*pplayer).Y][(*pplayer).X] == 'X') || (map[(*pplayer).Y][(*pplayer).X] == 'o') || (map[(*pplayer).Y][(*pplayer).X] == ':') || ((*pplayer).X < 0) || ((*pplayer).X > 99) || ((*pplayer).Y < 0) || ((*pplayer).Y > 32))
     {
         getOutOfLand(pplayer, slope);
     }
@@ -628,7 +647,7 @@ void windPush(int slope, int scale, int effectFactor, struct player * pplayer)
 
 void getOutOfLand(struct player * pplayer, int slope)
 {
-    while ((map[(*pplayer).Y][(*pplayer).X] == 'X') || (map[(*pplayer).Y][(*pplayer).X] == 'o') || ((*pplayer).X < 0) || ((*pplayer).X > 99) || ((*pplayer).Y < 0) || ((*pplayer).Y > 32))
+    while ((map[(*pplayer).Y][(*pplayer).X] == 'X') || (map[(*pplayer).Y][(*pplayer).X] == 'o') || (map[(*pplayer).Y][(*pplayer).X] == ':') || ((*pplayer).X < 0) || ((*pplayer).X > 99) || ((*pplayer).Y < 0) || ((*pplayer).Y > 32))
     {
         switch (slope)
         {
@@ -727,7 +746,7 @@ void moveConstraint(char key, bool* limitReached, int* countX, int* countY, bool
 }
 
 void windPoint(int slope)   // Τυπώνεται μια πυξίδα που δείχνει την
-{                           // κατύθυνση του ανέμου
+{                           // κατύθυνση και την ένταση του ανέμου
     switch(slope)
     {
         case 1:

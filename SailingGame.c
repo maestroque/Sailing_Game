@@ -81,7 +81,6 @@ char map[33][101] = {
 
 int main()
 {
-    system("mode 650");
     hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
     SMALL_RECT windowSize = {0 , 0 , 99, 40};
     SetConsoleWindowInfo(hConsole, TRUE, &windowSize);
@@ -90,7 +89,7 @@ int main()
 
     struct player players[MAX_PLAYERS];   // Λίστες που περιέχουν αντίστοιχα όλους τους παίκτες και τους
     struct player winners[MAX_PLAYERS];   // παίκτες που έχουν τερματίσει (η δεύτερη ανανεώνεται σε κάθε γύρο)
-    int player_number;
+    int player_number = 0;
     int slope, scale, effectFactor;
     char selection = '\0';
 
@@ -153,10 +152,20 @@ int main()
     }
 
     // Ο χρήστης εισάγει το πλήθος των παικτών και ένα όνομα και ένα σύμβολο για καθέναν από αυτούς
-        
-    gotoXY(0, 0);
-    printf("How many players are there? ");
-    scanf("%d", &player_number);
+
+    while((player_number > 5) || (player_number < 1))    
+    {   
+        gotoXY(0, 0);
+        printf("How many players are there? ");
+        scanf("%d", &player_number);
+        if((player_number > 5) || (player_number < 1))
+        {   
+            printf("Error: Players should be 1 to 5");
+            Sleep(2000);
+            deleteMessage(0);
+            deleteMessage(1);
+        }
+    }
 
     for (int i = 0; i < player_number; i++)
     {

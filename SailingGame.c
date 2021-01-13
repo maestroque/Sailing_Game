@@ -95,12 +95,12 @@ int main()
 
     // Εμφανίζεται η αρχική οθόνη, στην οποία υπάρχει η επιλογή να εμφανιστούν οδηγίες για το παιχνίδι
 
-    printf("****************************************************\n");
-    printf("*             Welcome to Sailing Game!             *\n");
-    printf("*    -Made by Gkekas Aggelos and Kikas Georgios    *\n");
-    printf("****************************************************\n");
-    printf(">Press Enter to Play\n");
-    printf(">Press Space for Instructions\n");
+    printf("\t\t\t****************************************************\n");
+    printf("\t\t\t*             Welcome to Sailing Game!             *\n");
+    printf("\t\t\t*    -Made by Gkekas Aggelos and Kikas Georgios    *\n");
+    printf("\t\t\t****************************************************\n");
+    printf("\t\t\t>Press Enter to Play\n");
+    printf("\t\t\t>Press Space for Instructions\n");
     while(true)
     {   
         selection = getch();
@@ -111,24 +111,24 @@ int main()
                 deleteMessage(i);
             }
             gotoXY(0,0);
-            printf("\t\t\t>INSTRUCTIONS<\n\n");
-            printf("\tA Sailing Game set in a lake with an island on its center.\n");
-            printf("  The goal is to be the first player to make a full lap around the island.\n");
-            printf("Each turn, the players one by one enter their moves using the WASD keys\n");
-            printf("and the moves are then executed simultanuously for all players. But, the\n");
-            printf("wind is an unpredictable factor each turn and it's behaviour is revealed\n");
-            printf("after the players have entered their moves. Then the winds affects them,\n");
-            printf("and their actual position is revealed.\n");
-            printf("  Players could possibly crash into each other, in which case they are\n");
-            printf("sent back to the start of the lap. Also, there are two types of waters:\n");
-            printf("deep and shallow. Players can move regularly through deep waters(blue\n");
-            printf("color), but cannot move to shallow waters(light blue). Only the wind can\n");
-            printf("send a player there, in which case they lose a turn. Note that players\n");
-            printf("once they get to shallow waters can only move out to deep ones and not\n");
-            printf("to adjacent shallow water blocks.\n");
-            printf("  Have fun playing!\n");
-            printf("  *Players 2 to 5*\n\n");
-            printf("When you are ready to play, press ENTER.\n");
+            printf("\t\t\t\t  >INSTRUCTIONS<\n\n");
+            printf("\t\tA Sailing Game set in a lake with an island on its center.\n");
+            printf("\t  The goal is to be the first player to make a full lap around the island.\n");
+            printf("\tEach turn, the players one by one enter their moves using the WASD keys\n");
+            printf("\tand the moves are then executed simultanuously for all players. But, the\n");
+            printf("\twind is an unpredictable factor each turn and it's behaviour is revealed\n");
+            printf("\tafter the players have entered their moves. Then the winds affects them,\n");
+            printf("\tand their actual position is revealed.\n");
+            printf("\t  Players could possibly crash into each other, in which case they are\n");
+            printf("\tsent back to the start of the lap. Also, there are two types of waters:\n");
+            printf("\tdeep and shallow. Players can move regularly through deep waters(blue\n");
+            printf("\tcolor), but cannot move to shallow waters(light blue). Only the wind can\n");
+            printf("\tsend a player there, in which case they lose a turn. Note that players\n");
+            printf("\tonce they get to shallow waters can only move out to deep ones and not\n");
+            printf("\tto adjacent shallow water blocks.\n");
+            printf("\t  Have fun playing!\n");
+            printf("\t  *Players 2 to 5*\n\n");
+            printf("\t\tWhen you are ready to play, press ENTER.\n");
             while(true)
             {
                 int sel = '\0';
@@ -156,11 +156,11 @@ int main()
     while((player_number > 5) || (player_number < 1))    
     {   
         gotoXY(0, 0);
-        printf("How many players are there? ");
+        printf("\t>>How many players are there? ");
         scanf("%d", &player_number);
         if((player_number > 5) || (player_number < 1))
         {   
-            printf("Error: Players should be 1 to 5");
+            printf("\t  Error: Players should be 1 to 5");
             Sleep(2000);
             deleteMessage(0);
             deleteMessage(1);
@@ -170,10 +170,10 @@ int main()
     for (int i = 0; i < player_number; i++)
     {
         system("cls");
-        printf("Enter the name of player %d: ", i + 1);
+        printf("\t>>Enter the name of player %d: ", i + 1);
         scanf("%s", players[i].name);
         fflush(stdin);
-        printf("Enter the symbol for player %d: ", i + 1);
+        printf("\t>>Enter the symbol for player %d: ", i + 1);
         players[i].symbol = getchar();
         players[i].X = 70 + 2*i;
         players[i].Y = 18;
@@ -211,13 +211,13 @@ int main()
 
             if (players[i].skipRound)  // Εαν στον προηγούμενο γύρο κάποιος έχασε τη σειρά του, δεν εισάγει κίνηση
             {
-                printf("%s lost their turn because of shallow waters!\n", players[i].name);
+                printf("\t>>%s lost their turn because of shallow waters!\n", players[i].name);
                 Sleep(2000);
             }
 
             else   // Οι υπόλοιποι παίκτες παίζουν κανονικά
             {
-                printf("Its %s's move\n", players[i].name);
+                printf("\t>>Its %s's move\n", players[i].name);
 
                 int counter = 0;
                 char key = ' ';
@@ -265,19 +265,19 @@ int main()
 
         SetConsoleTextAttribute(hConsole, 07);
         gotoXY(0, 34);
-        printf("The players wanted to go there. But Wild is the Wind...");
+        printf("\t>>The players wanted to go there. But Wild is the Wind...");
         Sleep(2000);
         deleteMessage(34);
         windGeneration(&slope, &scale);
         if(scale != 0)
         {   gotoXY(0, 34);
-            printf("This round the wind had: Slope of %d and Scale of %d", slope, scale);
+            printf("\t>>This round the wind had: Slope of %d and Scale of %d", slope, scale);
             windPoint(slope);
         }
         else 
         {
             gotoXY(0, 34);
-            puts("The wind was calm this round....");
+            puts("\t>>The wind was calm this round....");
         }
         Sleep(3000);
         for(int i = 0; i <= 5; i++)
@@ -321,7 +321,7 @@ int main()
         {
             gotoXY(0, 34);
             SetConsoleTextAttribute(hConsole, 07);
-            printf("%s has won! Congratulations!", winners[0].name);
+            printf("\t>>%s has won! Congratulations!", winners[0].name);
             Sleep(5000);
             exit(0);
         }
@@ -330,7 +330,7 @@ int main()
         {
             gotoXY(0, 34);
             SetConsoleTextAttribute(hConsole, 07);
-            printf("There has been a tie between: ", winners[0].name);
+            printf("\t>>There has been a tie between: ", winners[0].name);
             for (int i = 0; i < number_of_winners - 2; i++)
             {
                 printf("%s, ", winners[i].name);
@@ -357,7 +357,7 @@ int main()
                         players[j].hasCrushed = true;
                         deleteMessage(34);
                         gotoXY(0, 34);
-                        printf("Oh no! %s and %s have crashed into each other!\n", players[i].name, players[j].name);
+                        printf("\t>>Oh no! %s and %s have crashed into each other!\n", players[i].name, players[j].name);
                         getBackgroundColor(players[i].X, players[i].Y, false);
                         for(int k = 0; k < 2; k++)
                         {
@@ -563,11 +563,11 @@ int windGeneration(int *slope, int *scale)   // Δημιουργούνται, μ
     static int prevScale = 0;
 
     int variability1 = rand()%3;
-    *slope = 1 + (abs(prevSlope + A[variability1]))%8;
+    *slope = 1 + (abs(prevSlope + A[variability1]))%8;    // Αλλαγη της κατεύθηνσης κατα -1, 0 ή 1 (μεταξυ 1 και 8)
     prevSlope = *slope;
 
     int variability2 = rand()%3;
-    *scale = (abs(prevScale + A[variability2]))%3;
+    *scale = (abs(prevScale + A[variability2]))%3;       // Αλλαγη της έντασης κατα -1, 0 ή 1 (μεταξυ 0 και 2)
     prevScale = *scale;
 }
 
@@ -720,7 +720,7 @@ void moveConstraint(char key, bool* limitReached, int* countX, int* countY, bool
     deleteMessage(35);
     SetConsoleTextAttribute(hConsole, 07);
     gotoXY(0, 35);
-    printf("Horizontal Steps: %d | Vertical Steps: %d", MAX_XSTEPS-*countX, MAX_YSTEPS-*countY);  
+    printf("\t>>Horizontal Steps: %d | Vertical Steps: %d", MAX_XSTEPS-*countX, MAX_YSTEPS-*countY);  
 
     // Όταν ο παίκτης δε μπορεί να κάνει άλλα βήματα σε κάποια ή και στις δύο κατευθύνσεις τυπώνεται αντίστοιχο μηνυμα
 
@@ -729,7 +729,7 @@ void moveConstraint(char key, bool* limitReached, int* countX, int* countY, bool
         deleteMessage(36);
         gotoXY(0, 36);
         SetConsoleTextAttribute(hConsole, 07);
-        puts("You can't make more steps!\n");
+        puts("\t>>You can't make more steps!\n");
         *limitReached = true;
         Sleep(2000);
         deleteMessage(36);
@@ -741,7 +741,7 @@ void moveConstraint(char key, bool* limitReached, int* countX, int* countY, bool
         deleteMessage(36);
         gotoXY(0, 36);
         SetConsoleTextAttribute(hConsole, 07);
-        puts("You can't make more steps in the horizontal direction!\n");
+        puts("\t>>You can't make more steps in the horizontal direction!\n");
         *XlimitReached = true;
     }
     else if(*countY == MAX_YSTEPS)
@@ -749,7 +749,7 @@ void moveConstraint(char key, bool* limitReached, int* countX, int* countY, bool
         deleteMessage(36);
         gotoXY(0, 36);
         SetConsoleTextAttribute(hConsole, 07);
-        puts("You can't make more steps in the vertical direction!\n");
+        puts("\t>>You can't make more steps in the vertical direction!\n");
         *YlimitReached = true;
     }
 }
@@ -760,35 +760,35 @@ void windPoint(int slope)   // Τυπώνεται μια πυξίδα που δ�
     {
         case 1:
             gotoXY(0, 35);
-            puts("    N\n    |\nW   |   E\n\n    S");
+            puts("\t    N\n\t    |\n\tW   |   E\n\n\t    S");
             break;
         case 2:
             gotoXY(0, 35);
-            puts("    N\n     /\nW   /   E\n\n    S");
+            puts("\t    N\n\t     /\n\tW   /   E\n\n\t    S");
             break;
         case 3:
             gotoXY(0, 35);
-            puts("    N\n\nW   --- E\n\n    S");
+            puts("\t    N\n\n\tW   --- E\n\n\t    S");
             break;
         case 4:
             gotoXY(0, 35);
-            puts("    N\n\nW   \\   E\n     \\\n    S");
+            puts("\t    N\n\n\tW   \\   E\n\t     \\\n\t    S");
             break;
         case 5:
             gotoXY(0, 35);
-            puts("    N\n\nW   |   E\n    |\n    S");
+            puts("\t    N\n\n\tW   |   E\n\t    |\n\t    S");
             break;
         case 6:
             gotoXY(0, 35);
-            puts("    N\n\nW   /   E\n   /\n    S");
+            puts("\t    N\n\n\tW   /   E\n\t   /\n\t    S");
             break;
         case 7:
             gotoXY(0, 35);
-            puts("    N\n\nW ---   E\n\n    S");
+            puts("\t    N\n\n\tW ---   E\n\n\t    S");
             break;
         case 8:
             gotoXY(0, 35);
-            puts("    N\n   \\\nW   \\   E\n\n    S");
+            puts("\t    N\n\t   \\\n\tW   \\   E\n\n\t    S");
             break;
     }
 }

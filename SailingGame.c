@@ -3,8 +3,13 @@
 #include <conio.h>
 #include <stdbool.h>
 #include <stdlib.h>
-#include <math.h>
 #include <string.h>
+
+/*
+    windows.h -> Sleep function, ..
+    conio.h -> putch, gotoXY, ...
+    string.h -> strlen function
+*/
 
 #define ENTER 13
 #define WIDTH 100
@@ -13,7 +18,7 @@
 #define MAX_YSTEPS 4     // Σταθερές που περιορίζουν 
 #define MAX_XSTEPS 10    // την κίνηση των παικτών
 
-HANDLE hConsole;
+HANDLE hConsole;      // Χειρισμός της κονσόλας
 
 struct player      // Structure που έχει τισ πληροφορίες των παικτών
 {
@@ -81,6 +86,11 @@ char map[33][101] = {
 
 int main()
 {
+    /*
+        Sailing Game by Gkekas Aggelos and Kikas Georgios
+        Version 1.0
+        Date: 13/01/2021
+    */
     hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
     SMALL_RECT windowSize = {0 , 0 , 99, 40};
     SetConsoleWindowInfo(hConsole, TRUE, &windowSize);
